@@ -52,6 +52,38 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    //relations 
+    
+    public function courses(){
+        return $this->hasMany(Course::class,"teacher_id");
+    }
+
+    public function registrations(){
+        return $this->hasMany(Registration::class, "student_id");
+    }
+
+    public function coursesAsStudent(){
+        return $this->belongsToMany(Course::class,"registrations","student_id","course_id")
+                    ->withPivot(["registration_date","date_completed","progress","is_active","certificate_generated","certificate_url"])
+                    ->withTimestamps();
+    }
+
+    public function events(){
+        return $this->hasMany(Event::class, "created_by");
+    }
+
+    public function forums(){
+        return $this->hasMany(Forum::class,"created_by");
+    }
+
+    public function forumTopics() {
+        return $this->hasMany(ForumTopic::class, "author_id");
+    }
+
+    public function forumReplies(){
+        return $this->hasMany(ForumReply::class, "author_id");
+    }
+    // jwt
     public function getJWTIdentifier()
     {
         return $this->getKey();

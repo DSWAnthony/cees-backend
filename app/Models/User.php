@@ -52,6 +52,67 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    //relations 
+    
+    public function courses(){
+        return $this->hasMany(Course::class,"teacher_id");
+    }
+
+    public function registrations(){
+        return $this->hasMany(Registration::class, "student_id");
+    }
+
+    public function coursesAsStudent(){
+        return $this->belongsToMany(Course::class,"registrations","student_id","course_id")
+                    ->withPivot(["registration_date","date_completed","progress","is_active","certificate_generated","certificate_url"])
+                    ->withTimestamps();
+    }
+
+    public function events(){
+        return $this->hasMany(Event::class, "created_by");
+    }
+
+    public function forums(){
+        return $this->hasMany(Forum::class,"created_by");
+    }
+
+    public function forumTopics() {
+        return $this->hasMany(ForumTopic::class, "author_id");
+    }
+
+    public function forumReplies(){
+        return $this->hasMany(ForumReply::class, "author_id");
+    }
+
+    //tasks_submissions
+
+    //student : tareas enviadas
+    public function tasks(){ 
+        return $this->hasManyThrough(Task::class ,TasksSubmission::class,"student_id","id","id","task_id");
+    }
+    //students : entregas realizadas
+    public function submissions(){
+        return $this->hasMany(TasksSubmission::class,"student_id");
+    }
+    //profesores : entregas que ha calificado
+    public function gradedSubmissions(){
+        return $this->hasMany(TasksSubmission::class,"graded_by");
+    }
+
+    //LIVE CLASS
+
+    public function classAttendances (){
+        return $this->hasMany(ClassAttendance::class,"student_id");
+    }
+
+    public function liveClasses(){
+        return $this->belongsToMany(LiveClass::class,"class_attendances","student_id","live_class_id")
+                    /*->using(ClassAttendance::class)*/
+                    ->withPivot(["present","connection_time","registration_date"])
+                    ->withTimestamps();
+    }
+
+    // jwt
     public function getJWTIdentifier()
     {
         return $this->getKey();

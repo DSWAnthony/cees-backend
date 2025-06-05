@@ -13,4 +13,15 @@ class LiveClass extends Model
         return $this->belongsTo(Course::class,"course_id");
     }
 
+    public function classAttendances(){
+        return $this->hasMany(ClassAttendance::class,"live_class_id")->with("student");
+    }
+
+    public function students(){
+        return $this->belongsToMany(User::class,"class_attendances","live_class_id","student_id")
+                    ->using(ClassAttendance::class)
+                    ->withPivot(["present","connection_time","registration_date"])
+                    ->withTimestamps();
+    }
+
 }

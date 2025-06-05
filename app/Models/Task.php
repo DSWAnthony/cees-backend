@@ -19,4 +19,12 @@ class Task extends Model
         return $this->belongsTo(Module::class,"module_id");
     }
 
+    public function submissions(){
+        return $this->hasMany(TasksSubmission::class,"task_id");
+    }
+
+    public function students(){
+        return $this->belongsToMany(User::class,"tasks_submissions","task_id","student_id");
+    }
+
 }

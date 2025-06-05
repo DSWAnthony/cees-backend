@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\QuizController;
+use App\Http\Controllers\ClassAttendanceController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ForumController;
@@ -10,8 +9,11 @@ use App\Http\Controllers\ForumReplyController;
 use App\Http\Controllers\ForumTopicController;
 use App\Http\Controllers\LiveClassController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TaskSubmissionController;
 use App\Http\Middleware\AuthAdmin;
 use App\Http\Middleware\AuthTeacher;
 use Illuminate\Http\Request;
@@ -55,6 +57,18 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get("/forums-topics/{topicId}/replies",[ForumReplyController::class, "findByIdTopic"]);
     Route::apiResource("forums-replies",ForumReplyController::class);
+    
+    
+    Route::get('/teachers/{idTeacher}/graded-submissions', [TaskSubmissionController::class, 'getGradedByTeacher']);
+    Route::get('/students/{studentId}/pending-tasks', [TaskSubmissionController::class, 'getPendingTasksByStudent']);
+    Route::get('/students/{idStudent}/submission-tasks',[TaskSubmissionController::class,"getTasksSubmittedByStudent"]);
+    Route::apiResource("task-submissions",TaskSubmissionController::class);
+
+    Route::get("/class/{idClass}/class-attendance",[ClassAttendanceController::class,"attendanceByClass"]);
+    Route::get("/student/{id}/class-attendance",[ClassAttendanceController::class,"attendanceClassesByStudents"]);
+    Route::apiResource("class-attendances",ClassAttendanceController::class);
+
+
     Route::get("courses/teacher/{id}", [CourseController::class , "findByIdTeacher"]);
 });
 

@@ -83,6 +83,35 @@ class User extends Authenticatable implements JWTSubject
     public function forumReplies(){
         return $this->hasMany(ForumReply::class, "author_id");
     }
+
+    //tasks_submissions
+
+    //student : tareas enviadas
+    public function tasks(){ 
+        return $this->hasManyThrough(Task::class ,TasksSubmission::class,"student_id","id","id","task_id");
+    }
+    //students : entregas realizadas
+    public function submissions(){
+        return $this->hasMany(TasksSubmission::class,"student_id");
+    }
+    //profesores : entregas que ha calificado
+    public function gradedSubmissions(){
+        return $this->hasMany(TasksSubmission::class,"graded_by");
+    }
+
+    //LIVE CLASS
+
+    public function classAttendances (){
+        return $this->hasMany(ClassAttendance::class,"student_id");
+    }
+
+    public function liveClasses(){
+        return $this->belongsToMany(LiveClass::class,"class_attendances","student_id","live_class_id")
+                    /*->using(ClassAttendance::class)*/
+                    ->withPivot(["present","connection_time","registration_date"])
+                    ->withTimestamps();
+    }
+
     // jwt
     public function getJWTIdentifier()
     {

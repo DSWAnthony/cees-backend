@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ClassAttendanceController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventController;

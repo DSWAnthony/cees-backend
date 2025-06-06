@@ -11,4 +11,9 @@ class OptionRepositoryImpl implements OptionRepository
     {
         return Option::create($data);
     }
+
+    public function updateOrCreate() : bool|Option
+    {
+        return false;
+    }
 }

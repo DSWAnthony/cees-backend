@@ -19,4 +19,11 @@ class QuizRepositoryImpl implements QuizRepository
     {
         return Quiz::all();
     }
+
+    public function update(int $quizId,array $data) : Quiz
+    {
+        $quiz = Quiz::findOrFail($quizId);
+        $quiz->update($data);
+        return $quiz;
+    }
 }
